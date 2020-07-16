@@ -1,0 +1,15 @@
+package com.sample
+ 
+import java.util.*;
+import com.sample.*;
+ 
+rule "Hello World"
+agenda-group "similar-group"
+no-loop
+    when
+       $lst : List()
+       $emp : Employee($name : name,$address : address) from $lst
+       $al : ArrayList() from collect (String() from $name)
+    then
+    System.out.println(drools.getRule().getName()+":" +$al);
+end
