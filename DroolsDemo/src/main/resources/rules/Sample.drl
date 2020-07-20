@@ -11,5 +11,6 @@ no-loop
        $emp : Employee($name : name,$address : address) from $lst
        $al : ArrayList() from collect (String() from $name)
     then
+    System.out.println("added line for master branch changes");
     System.out.println(drools.getRule().getName()+":" +$al);
 end
