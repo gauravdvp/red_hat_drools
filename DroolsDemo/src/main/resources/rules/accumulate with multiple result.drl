@@ -1,0 +1,32 @@
+package com.sample
+ 
+import java.util.*;
+import com.sample.*;
+ 
+rule "accumulate with multi results"
+agenda-group "accumulate with multi results"
+when
+	$list : List()
+	accumulate(
+	    Employee($age : age) from $list;//getting Employee via iterating $list
+	    $maxAge : max($age)			,	//getting max age among all the employee and assiging into $maxAge variable
+	    $avg	: average($age)		,	//getting avg age of all the employee and assiging into $avg variable
+	    $cnt	: count($age)		,	//getting count of age among all the employee and assiging into $cnt variable
+	    $sum	: sum($age)			,	//getting sum of age of all the employee and assiging into $sum variable
+	    $colList: collectList($age)	,	//make a list, add all the employee ages to the list and store into $colList variable
+	    $colSet	: collectSet($age)		//make a list, add all the employee ages to the list and store into $colList variable
+	)
+then
+System.out.println(
+		drools.getRule().getName()+ "\n"+
+		" max age		: " + $maxAge	+ "\n" +
+		" avg age		: " + $avg		+ "\n" +
+		" count			: " + $cnt		+ "\n" +
+		" sum			: " + $sum		+ "\n" +
+		"list of ages 	: "	+ $colList 	+ "\n" +
+		"set of ages 	: "	+ $colSet);
+end
+
+/*	1. Find out max age among mulitple employee.
+	2. Find out avg age of all the employee.
+*/

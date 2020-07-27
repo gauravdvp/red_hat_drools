@@ -1,0 +1,26 @@
+package com.sample
+ 
+import java.util.*;
+import com.sample.*;
+rule "use of collect from collection"
+agenda-group "only accumulate with built in function"
+    when
+    $list	 : List()
+    $empList : ArrayList() from collect (
+    				Employee(age>20) from $list //iterate the $list and based on the constraint, filter the employee.
+    		   )
+    then
+        for(Object e : $empList)
+            System.out.println(e);
+    	System.out.println(drools.getRule().getName());
+end
+
+rule "use of collect from direct working memory"
+agenda-group "only accumulate with built in function"
+    when
+    $empList : List() from collect (//it will create a empty list and then add emplyoee fact based on the constraint, directly from working memory where fact age < 20.
+    				Employee(age<20)//and if not a single fact found then $empList is having the empty list.
+    		   )
+    then
+    	System.out.println(drools.getRule().getName()+$empList);
+end

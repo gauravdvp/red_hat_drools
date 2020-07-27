@@ -1,0 +1,13 @@
+package com.sample
+ 
+import java.util.*;
+import com.sample.*;
+ /*Please see the . operator for skillSet multi attribute selection, line 10*/
+rule "dot operator for multi attirbute selection"
+agenda-group "dot operator for multi attribute selection"
+    when
+    $empList : List()
+    Employee(skillSet.(primarySkill=="java-1",secondarySkill=="javascript-1")) from $empList
+    then
+    System.out.println(drools.getRule().getName());
+end

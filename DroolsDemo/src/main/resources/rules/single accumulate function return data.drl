@@ -1,0 +1,20 @@
+package com.sample
+ 
+import java.util.*;
+import com.sample.*;
+ 
+rule "single accumulate function return data"
+agenda-group "single accumulate function return data"
+when
+	$list : List()
+	$num  :Integer() from accumulate (
+	    		Employee($age : age) from $list;
+	    		max($age)
+	    	)
+then
+	System.out.println(drools.getRule().getName()+" : "+ $num);
+end
+
+/*	1. Find out max age among mulitple employee.
+	2. Find out avg age of all the employee.
+*/

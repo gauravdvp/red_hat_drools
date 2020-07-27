@@ -1,0 +1,14 @@
+package com.sample
+ 
+import java.util.*;
+import com.sample.*;
+ 
+rule "not dot operator checking"
+agenda-group "not dot operator checking"
+    when
+      $emp : Employee(skillSet!.primarySkill!.equals("java"))
+      //!. operator first check the left side and if the left side is not null then call the right one
+      //So, if skillSet is not null then only it will call primarySkill and if primarySkill will not null then only it will call equals method.
+    then
+    	System.out.println(drools.getRule().getName()+$emp);
+end

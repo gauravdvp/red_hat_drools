@@ -1,0 +1,25 @@
+package com.sample
+ 
+import java.util.*;
+import com.sample.*;
+ 
+rule "use of matches"
+agenda-group "use of matches"
+    when
+      $emp : Employee(skillSet.primarySkill matches "^\\w{2}va$")
+      //the primarySkill should be of length 4, where the first 2 char will be any char but the last must be 'va'. 
+    then
+    	System.out.println(drools.getRule().getName()+$emp);
+end
+
+rule "use of not matches"
+agenda-group "use of matches"
+    when
+      $emp : Employee(skillSet.secondarySkill not matches "^\\w{2}va$")
+      //the secondarySkill should be of length 4, where the first 2 char will be any char but the last must be 'va'. 
+    then
+    	System.out.println(drools.getRule().getName()+$emp);
+end
+/*
+matches is a regex operators which will work on string
+*/

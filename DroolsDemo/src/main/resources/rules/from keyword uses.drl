@@ -1,0 +1,13 @@
+package com.sample
+ 
+import java.util.*;
+import com.sample.*;
+rule "form keyword uses 1"
+agenda-group "form keyword to iterate element"
+    when
+    	$lst : List()
+    	$emp : Employee($address : address) from $lst
+    	$add : Address($state : state in ("bihar")) from $address
+    then
+    	System.out.println(drools.getRule().getName()+$state);
+end

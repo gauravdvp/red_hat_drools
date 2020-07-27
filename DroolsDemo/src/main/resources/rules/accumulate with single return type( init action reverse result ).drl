@@ -1,0 +1,35 @@
+package com.sample
+ 
+import java.util.*;
+import com.sample.*;
+ 
+rule "accumulate with single return type init action reverse result"
+agenda-group "accumulate with single return type init action reverse result"
+when
+	$list		: List()
+	$cityList	: ArrayList() from accumulate (
+										$emp  : Employee() from $list and
+										Address($state : state, $city : city) from $emp.address,
+										
+										//accumulate initialization block
+										init(
+											ArrayList<String> al=new ArrayList<String>();
+											Collection<String> col=new HashSet<String>();
+											for(int i=0;i<10;i++)// just raugh checking
+											    System.out.println(i);
+										)
+										
+										//accumulate action block
+										action(
+												if($state.equals("bihar"))
+													al.add($city);
+										)
+										reverse(
+										     //this block is used to undo action if you want
+										),
+										//the final/result block, from where result will be return
+										result(al)
+				)
+then
+System.out.println(drools.getRule().getName()+" : "+$cityList);
+end

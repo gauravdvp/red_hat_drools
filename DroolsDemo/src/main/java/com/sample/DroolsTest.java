@@ -1,57 +1,122 @@
 package com.sample;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
-/**
- * This is a sample class to launch a rule.
- */
+//Your drools project starts from here
 public class DroolsTest {
+	// KIE Configuration
+	private final static KieServices ks = KieServices.Factory.get();
+	private final static KieContainer kContainer = ks.getKieClasspathContainer();
+	private final static KieSession kSession = kContainer.newKieSession("ksession-rules");
 
-	public static final void main(String[] args) {
-		List.of(new Color("green"));
-		try {
-			// load up the knowledge base
-			KieServices ks = KieServices.Factory.get();
-			KieContainer kContainer = ks.getKieClasspathContainer();
-			KieSession kSession = kContainer.newKieSession("ksession-rules");
-			kSession.getAgenda().getAgendaGroup("similar-group").setFocus();
-			List<Employee> emp = List.of(
-					new Employee("kumar",
-							List.of(new Address("bihar_1", "patna_1"), new Address("bihar_1_1", "patna_1_1"),
-									new Address("bihar_1_1_1", "patna_1_1_1"))),
-					new Employee("gaurav", List.of(new Address("bihar_2", "patna_2"),
-							new Address("bihar_2_1", "patna_2_1"), new Address("bihar_2_1_1", "patna_2_1_1"))));
-			kSession.insert(emp);
-			kSession.fireAllRules();
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
+	// resource initializer
+	private final static List<Object> resources = new ArrayList<>();
+
+	// main method
+	public static void main(String[] args) {
+		//wantGlobalResources(kSession, 0);
+		//kSession.insert(new AccumulateBuiltInFunction(12));
+		//kSession.insert(new AccumulateBuiltInFunction(12));
+		//kSession.insert(new AccumulateBuiltInFunction(12));
+		// setFocusAndFire(kSession, "dot operator for multi attribute selection");
+		//kSession.insert(new Employee(null,null, 12,new SkillSet("java","javascript"),null));
+		wantGlobalResources(kSession,0);
+		setFocusAndFire(kSession, "single accumulate function return data");
+
 	}
 
-	private class Color {
-		private String color;
+	// initialize all resources which you want to use in drl file.
+	static {
+		// resource number - 0
+		resources.add(List.of(//list of employee : name, address list, age and skillset
+				/*--------------------- employee-1 ------------------------*/
+				new Employee(
+						"kumar",
+						List.of(
+								new Address("bihar", "patna"), 
+								new Address("up", "vila"),
+								new Address("jharkhand", "ranchi")
+								),
+						12, 
+						new SkillSet(
+								"java", 
+								"javascript"
+								),
+						List.of(3453,23213)),
+				/*--------------------- employee-2 ------------------------*/
+				new Employee(
+						"gaurav",
+						List.of(
+								new Address("tamil nadu", "coimbatore"), 
+								new Address("gujarat", "surat"),
+								new Address("maharashtra", "nagpur")
+								),
+						34, 
+						new SkillSet(
+								"c++", 
+								"nodeJS"
+								),
+						List.of(9876,5768)),
+				/*--------------------- employee-3 ------------------------*/
+				new Employee(
+						"verma", 
+						List.of(
+								new Address("kerala", "kochi"), 
+								new Address("kerala", "thrissur"),
+								new Address("bihar", "danapur")), 
+						44, 
+						new SkillSet(
+								"visual basic", 
+								"typescript"
+								),
+						List.of(45655,32783)))
+				);
 
-		public Color(String color) {
-			this.color = color;
-		}
-
-		public String getColor() {
-			return color;
-		}
-
-		public void setColor(String color) {
-			this.color = color;
-		}
+		// resource number - 1
+		resources.add(new int[] { 1, 2, 3, 4, 5 });
 	}
 
-	public static List<Color> getList(List<Color> l, Predicate<Color> p) {
-		return l.stream().filter(p).collect(Collectors.toList());
+	public static void wantGlobalResources(KieSession kSession, int... resourceNumber) {
+		if (resourceNumber == null)
+			return;
+		for (int i : resourceNumber)
+			kSession.insert(resources.get(i));
 
+	}
+
+	public static <T> void genericFunction(KieSession kSession, T t) {
+		kSession.insert(t);
+	}
+
+	// accumulate function
+	// 1.drl----------------------------------------------------------------
+	public static void setFocusAndFire(KieSession kSession, String agendaGroup) {
+		kSession.getAgenda().getAgendaGroup(agendaGroup).setFocus();
+		kSession.fireAllRules();
+		kSession.dispose();
+		kSession.getAgenda().getAgendaGroup(agendaGroup).clear();
+	}
+
+	// accumulate function
+	// 2.drl----------------------------------------------------------------
+	public static void accumulate_function_2(KieSession kSession, String agendaGroup) {
+		kSession.getAgenda().getAgendaGroup(agendaGroup).setFocus();
+		wantGlobalResources(kSession, 1);
+		kSession.fireAllRules();
+		kSession.getAgenda().getAgendaGroup(agendaGroup).clear();
+	}
+
+	// accumulate function
+	// 3.drl----------------------------------------------------------------
+	public static void accumulate_function_3(KieSession kSession, String agendaGroup) {
+		kSession.getAgenda().getAgendaGroup(agendaGroup).setFocus();
+
+		kSession.fireAllRules();
+		kSession.getAgenda().getAgendaGroup(agendaGroup).clear();
 	}
 }
