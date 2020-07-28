@@ -1,0 +1,25 @@
+package com.sample
+ 
+import java.util.*;
+import com.sample.*;
+ 
+rule "list to sort"
+agenda-group "list to sort"
+    when
+       $lst : ListUsedInDrools($empNm : empName)
+       $e	: List() from accumulate (
+       				$str : String() from $empNm;
+       				init(
+       					List<String> list = new ArrayList<String>();
+       				),
+       				action(
+       					list.add($str);
+       					Collections.sort(list);
+       				),
+       				result(
+       					list
+       				)
+       			)
+    then
+    	System.out.println("hello"+$e);
+end

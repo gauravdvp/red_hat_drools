@@ -1,0 +1,37 @@
+package com.sample
+ 
+import java.util.*;
+import com.sample.*;
+ 
+rule "map iteration using map.entry"
+agenda-group "map iteration"
+    when
+       $mud : MapUsedInDrools($empWithSkillSet : empWithSkillSet)
+       $map : Map($entrySet : entrySet) from $empWithSkillSet
+       $set : Map.Entry($key : key,$value : value) from $entrySet
+       $val : String() from $value
+    then
+    	System.out.println($val);
+end
+
+rule "map iteration using key and accumulate function"
+agenda-group "map iteration"
+    when
+       $mud : MapUsedInDrools($empWithSkillSet : empWithSkillSet)
+       $set : Set() from accumulate (
+         	$str : String() from $empWithSkillSet.get("gaurav");
+         	collectSet($str)
+      )
+         
+    then
+    	System.out.println(new TreeSet($set));
+end
+
+rule "map iteration using key and from collect"
+agenda-group "map iteration"
+    when
+       $mud : MapUsedInDrools($empWithSkillSet : empWithSkillSet)
+       $set : Set() from collect (String() from $empWithSkillSet.get("gaurav"))
+    then
+    	System.out.println($set);
+end
